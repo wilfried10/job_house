@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "711059446728",
+    "project_id": "jobo-8f269",
+    "storage_bucket": "jobo-8f269.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711059446728:android:be1674173bc15a4eabbefd",
+        "android_client_info": {
+          "package_name": "com.example.job_house"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711059446728-qnglg7k5de17gm518gs237773gp29vdl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.job_house",
+            "certificate_hash": "55b1b1a989d60482c8c19e28b7966f71fbda104f"
+          }
+        },
+        {
+          "client_id": "711059446728-2l4tb4upbusn7qt01pnvnva63obljp77.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCiase_F8U9Ob-r3bUPI6GdeKU4YQBaMs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "711059446728-2l4tb4upbusn7qt01pnvnva63obljp77.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
