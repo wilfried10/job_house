@@ -14,7 +14,7 @@ class Etape extends StatelessWidget {
       appBar: AppBar(
         actions: [
 Animated(
-  delay: 1500,
+  delay: 50,
   child: Image.asset('asset/img/logo.jpg',width: 100,height: 50,))
         ],
 
@@ -23,7 +23,7 @@ Animated(
       Column(
         children: [
           Animated(
-            delay:1500,
+            delay:250,
             child: Expanded(
 
             child: Container(
@@ -41,7 +41,7 @@ Animated(
           ),
      
         Animated(
-          delay: 4000,
+          delay: 400,
           child: Expanded(child: Column(children: [
            
               CustomButton(primary: true, name: 'S \'inscrire', ontap: (){ Navigator.push(context, MaterialPageRoute(builder: (_)=>const SingUp() ));}),

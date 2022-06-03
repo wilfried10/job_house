@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-class User {
+class UserModel {
   final String email;
   final String username;
   final String password;
   final String? profil;
 
-  User(this.email, this.username, this.password, [this.profil]);
+  UserModel(this.email, this.username, this.password, [this.profil]);
 
   bool get exists => false;
 
@@ -23,8 +23,8 @@ class User {
     return result;
   }
 
-  factory User.fromMap(Map<String, dynamic> map) {
-    return User(
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
       map['email'] ?? '',
       map['username'] ?? '',
       map['password'] ?? '',
@@ -34,7 +34,8 @@ class User {
 
   String toJson() => json.encode(toMap());
 
-  factory User.fromJson(String source) => User.fromMap(json.decode(source));
+  factory UserModel.fromJson(String source) =>
+      UserModel.fromMap(json.decode(source));
 
   data() {}
 }

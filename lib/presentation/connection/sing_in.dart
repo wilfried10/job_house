@@ -1,9 +1,13 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:job_house/constantes.dart';
+import 'package:job_house/presentation/home.dart';
 import 'package:job_house/widget/customs_buttom.dart';
+
+import '../../services/shared_pref.dart';
 
 class SingIn extends StatefulWidget {
   const SingIn({Key? key}) : super(key: key);
@@ -13,16 +17,12 @@ class SingIn extends StatefulWidget {
 }
 
 class _SingInState extends State<SingIn> {
-  final  emailController = TextEditingController();
-  final  passwordController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final ImagePicker _picker = ImagePicker();
-  File? profil;
-  bool loading = true;
-
+  bool _isLoading = false;
 
   @override
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -55,44 +55,6 @@ class _SingInState extends State<SingIn> {
               const SizedBox(
                 height: 10,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                      padding: EdgeInsets.all(20),
-                      child: Text("welcome back ",
-                          style: secondaryText.copyWith(fontSize: 17))),
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          // final XFile? photo  = await _picker.pickImage(source: ImageSource.camera);
-                        },
-                        child: ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(50)),
-                          child: Container(
-                            margin: EdgeInsets.all(4),
-                            width: 50,
-                            height: 50,
-                            child: profil != null
-                                ? Image.file(
-                                    profil!,
-                                    fit: BoxFit.cover,
-                                  )
-                                : const Icon(Icons.add_a_photo),
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: primaryCouleur,
-                                )),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
               const SizedBox(
                 height: 10,
               ),
@@ -106,7 +68,8 @@ class _SingInState extends State<SingIn> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextFormField(
-                          
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
                           decoration: const InputDecoration(
                             labelText: "Mail",
                             icon: Icon(Icons.mail),
@@ -123,6 +86,7 @@ class _SingInState extends State<SingIn> {
                           },
                         ),
                         TextFormField(
+                          controller: passwordController,
                           decoration: const InputDecoration(
                             labelText: "PassWord",
                             icon: Icon(Icons.keyboard_alt_rounded),
@@ -154,13 +118,42 @@ class _SingInState extends State<SingIn> {
                         ),
                         CustomButton(
                           name: "Se connecter",
-                          ontap: () {
+                          isLoading: _isLoading,
+                          ontap: () async {
                             if (_formKey.currentState!.validate()) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Processing Data')),
-                              );
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              try {
+                                await FirebaseAuth.instance
+                                    .signInWithEmailAndPassword(
+                                        email: emailController.text.trim(),
+                                        password:
+                                            passwordController.text.trim())
+                                    .then((value) {
+                                  Shared.setConnect(true);
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => const Home()),
+                                      (route) => false);
+                                });
+                              } on FirebaseAuthException catch (e) {
+                                if (e.code == 'user-not-found') {
+                                  print('No user found for that email.');
+                                } else if (e.code == 'wrong-password') {
+                                  print(
+                                      'Wrong password provided for that user.');
+                                }
+                              }
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   const SnackBar(
+                              //       content: Text('Processing Data')),
+                              // );
                             }
+                            setState(() {
+                              _isLoading = false;
+                            });
                           },
                         ),
                         // Column(

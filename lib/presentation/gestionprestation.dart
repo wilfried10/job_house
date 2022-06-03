@@ -141,11 +141,12 @@ class _GestionPrestationState extends State<GestionPrestation> {
                                 content: Text(
                                     'votre compte a ete creer avc succes')),
                           );
-                          Navigator.push(
+                          Shared.setPrestataireCreated(true);
+                          Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => const Abonement(),
-                              ));
+                                  builder: (_) => const Abonement()),
+                              (route) => false);
                         }
                       },
                     ),

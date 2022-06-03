@@ -23,7 +23,7 @@ class _AnimatedState extends  State<Animated> with SingleTickerProviderStateMixi
     final Curve= CurvedAnimation(parent: _controller, curve: Curves.decelerate,);
 
     _animationOffset= Tween<Offset>(
-      begin: Offset(0.8,0.5),
+      begin: Offset(0,0.5),
       end: Offset.zero,
     ).animate(Curve);
     Timer(Duration(milliseconds: widget.delay), (){

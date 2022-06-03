@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:job_house/constantes.dart';
@@ -22,11 +24,13 @@ class _SingUpState extends State<SingUp> {
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _picker = ImagePicker();
   File? profil;
+  bool _isLoading = false;
   final UserProvider userManager = UserProvider();
 
   final TextEditingController email = TextEditingController();
   final TextEditingController username = TextEditingController();
   final TextEditingController password = TextEditingController();
+  final storageRef = FirebaseStorage.instance.ref().child("images");
 
   bool loading = false;
 
@@ -36,7 +40,7 @@ class _SingUpState extends State<SingUp> {
       appBar: AppBar(
         actions: [
           Animated(
-              delay: 1400,
+              delay: 50,
               child: Image.asset(
                 'asset/img/logo.jpg',
                 width: 100,
@@ -50,7 +54,7 @@ class _SingUpState extends State<SingUp> {
         },
         child: SingleChildScrollView(
           child: Animated(
-            delay: 1400,
+            delay: 400,
             child: Column(
               children: [
                 Container(
@@ -93,13 +97,14 @@ class _SingUpState extends State<SingUp> {
                                                       source:
                                                           ImageSource.camera);
 
-                                              Navigator.pop(context);
-
                                               if (photo != null) {
                                                 setState(() {
                                                   profil = File(photo.path);
                                                 });
                                               }
+                                              Navigator.pop(
+                                                context,
+                                              );
                                             },
                                           ),
                                           ListTile(
@@ -111,12 +116,12 @@ class _SingUpState extends State<SingUp> {
                                                   await _picker.pickImage(
                                                       source:
                                                           ImageSource.gallery);
-                                              Navigator.pop(context);
                                               if (photo != null) {
                                                 setState(() {
                                                   profil = File(photo.path);
                                                 });
                                               }
+                                              Navigator.pop(context);
                                             },
                                           ),
                                         ],
@@ -163,6 +168,7 @@ class _SingUpState extends State<SingUp> {
                         children: [
                           TextFormField(
                             controller: email,
+                            keyboardType: TextInputType.emailAddress,
                             decoration: const InputDecoration(
                               labelText: "Mail",
                               icon: Icon(Icons.mail),
@@ -209,29 +215,66 @@ class _SingUpState extends State<SingUp> {
                           ),
                           CustomButton(
                             name: "S 'inscrire",
-                            ontap: () {
+                            isLoading: _isLoading,
+                            ontap: () async {
                               if (_formKey.currentState!.validate()) {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+
+                                // if (profil != null) {
+                                //   try {
+                                //     final task =
+                                //         await storageRef.putFile(profil!);
+                                //   } on FirebaseException catch (e) {
+                                //     // ...
+                                //   }
+                                // }
+
                                 try {
-                                  userManager
-                                      .addUser(User(
-                                          email.text.trim(),
-                                          username.text.trim(),
-                                          password.text.trim()))
+                                  await FirebaseAuth.instance
+                                      .createUserWithEmailAndPassword(
+                                    email: email.text.trim(),
+                                    password: password.text.trim(),
+                                  )
                                       .then((value) {
-                                    Shared.setConnect(true);
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) => const Home()));
+                                    userManager
+                                        .addUserByDoc(
+                                            value.user!.uid,
+                                            UserModel(
+                                                email.text.trim(),
+                                                username.text.trim(),
+                                                password.text.trim()))
+                                        .then((value) {
+                                      Shared.setConnect(true);
+                                      Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) => const Home()),
+                                          (route) => false);
+                                    });
                                   });
+                                } on FirebaseAuthException catch (e) {
+                                  if (e.code == 'weak-password') {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Le mot de passe est faible')),
+                                    );
+                                  } else if (e.code == 'email-already-in-use') {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text('Email deja utilise ')),
+                                    );
+                                  }
                                 } catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content:
-                                            Text('Une erreur est survenue')),
-                                  );
+                                  print(e);
                                 }
                               }
+
+                              setState(() {
+                                _isLoading = false;
+                              });
                             },
                           ),
                         ]),
