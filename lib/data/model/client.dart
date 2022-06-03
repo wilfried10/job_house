@@ -1,20 +1,20 @@
 import 'dart:convert';
 
 class Client {
-  int idprest;
-  String nom;
-  String prenom;
-  String email;
-  int telephone;
-  String password;
-  String vile;
+ final int idprest;
+ final String nom;
+ final String prenom;
+ final String email;
+ final int telephone;
+ final String photo;
+ final String vile;
   Client({
     required this.idprest,
     required this.nom,
     required this.prenom,
     required this.email,
     required this.telephone,
-    required this.password,
+    required this.photo,
     required this.vile,
   });
 
@@ -26,7 +26,7 @@ class Client {
     result.addAll({'prenom': prenom});
     result.addAll({'email': email});
     result.addAll({'telephone': telephone});
-    result.addAll({'password': password});
+    result.addAll({'photo': photo});
     result.addAll({'vile': vile});
   
     return result;
@@ -39,7 +39,7 @@ class Client {
       prenom: map['prenom'] ?? '',
       email: map['email'] ?? '',
       telephone: map['telephone']?.toInt() ?? 0,
-      password: map['password'] ?? '',
+      photo: map['password'] ?? '',
       vile: map['vile'] ?? '',
     );
   }

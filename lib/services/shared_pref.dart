@@ -11,8 +11,7 @@ class Shared {
 
   }
   static setConnect( bool value) async{
-   await _prefs!.setBool(connect, !getConnect() );
-  print(_prefs!.getBool(connect));
+   await _prefs!.setBool(connect, value );
   }
   static getConnect()  =>  _prefs!.getBool(connect) ?? false;
 }

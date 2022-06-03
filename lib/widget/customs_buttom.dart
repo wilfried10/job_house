@@ -7,6 +7,7 @@ class CustomButton extends StatelessWidget {
   final bool primary ;
   final String name;
   final void Function() ontap;
+  
 
   const CustomButton({ Key? key, this.primary = true,  required this.name, required this.ontap }) : super(key: key);
   @override
@@ -18,8 +19,8 @@ class CustomButton extends StatelessWidget {
         width: double.infinity,
         alignment: Alignment.center,
         
-        padding: const EdgeInsets.symmetric(vertical:16),
-        margin: const EdgeInsets.symmetric(horizontal:35, vertical: 20),
+        padding: const EdgeInsets.symmetric(vertical:14),
+        margin: const EdgeInsets.symmetric(horizontal:30, vertical: 18),
         
     child: Text(name,style: TextStyle(color: primary  ?  bg: primaryCouleur ,fontWeight: FontWeight.w700),),
     decoration: BoxDecoration(

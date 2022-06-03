@@ -1,51 +1,52 @@
 import 'dart:convert';
 
-class Prestataire {
-  int idprest;
-  String nom;
-  String prenom;
-  String email;
-  int telephone;
-  String password;
-  String vile;
- Prestataire({
-    required this.idprest,
-    required this.nom,
-    required this.prenom,
-    required this.email,
-    required this.telephone,
-    required this.password,
-    required this.vile,
-  });
+class Prestatair {
+  final String nom;
+  final String prenom;
+
+  final String telephone;
+  final String ville;
+  final String profession;
+
+
+
+  Prestatair( 
+   this.nom, this.prenom, this.telephone, this.ville, 
+       this.profession);
   
+
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
   
-    result.addAll({'idprest': idprest});
     result.addAll({'nom': nom});
     result.addAll({'prenom': prenom});
-    result.addAll({'email': email});
+   
     result.addAll({'telephone': telephone});
-    result.addAll({'password': password});
-    result.addAll({'vile': vile});
+    result.addAll({'ville': ville});
+  
+   
+    
+    result.addAll({'profession': profession});
   
     return result;
   }
 
-  factory Prestataire.fromMap(Map<String, dynamic> map) {
-    return Prestataire(
-      idprest: map['idprest']?.toInt() ?? 0,
-      nom: map['nom'] ?? '',
-      prenom: map['prenom'] ?? '',
-      email: map['email'] ?? '',
-      telephone: map['telephone']?.toInt() ?? 0,
-      password: map['password'] ?? '',
-      vile: map['vile'] ?? '',
+  factory Prestatair.fromMap(Map<String, dynamic> map) {
+    return Prestatair(
+      map['nom'] ?? '',
+      map['prenom'] ?? '',
+    
+      map['telephone'] ?? '',
+      map['ville'] ?? '',
+     
+     
+      
+      map['profession'] ?? '',
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Prestataire.fromJson(String source) => Prestataire.fromMap(json.decode(source));
+  factory Prestatair.fromJson(String source) => Prestatair.fromMap(json.decode(source));
 }

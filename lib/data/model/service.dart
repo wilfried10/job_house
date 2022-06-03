@@ -1,31 +1,43 @@
 import 'dart:convert';
 
 class Service {
-  int idservice;
-  String libelle;
-  Service({
-    required this.idservice,
-    required this.libelle,
-  });
-  
+  final String libelle;
+   String? picture;
+  final String description;
+  final String budget;
+  final String categorie;
+  final String duree;
+
+  Service( this.libelle, this.description,
+      this.budget, this.categorie, this.duree,
+      [this.picture]);
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
-  
-    result.addAll({'idservice': idservice});
+
     result.addAll({'libelle': libelle});
-  
+    result.addAll({'Picture': picture});
+    result.addAll({'description': description});
+    result.addAll({'budget': budget});
+    result.addAll({'categorie': categorie});
+    result.addAll({'duree': duree});
+
     return result;
   }
 
   factory Service.fromMap(Map<String, dynamic> map) {
     return Service(
-      idservice: map['idservice']?.toInt() ?? 0,
-      libelle: map['libelle'] ?? '',
+      map['libelle'] ?? '',
+      map['picture'] ?? '',
+      map['description'] ?? '',
+      map['budget'] ?? '',
+      map['categorie'] ?? '',
+      map['duree']?.toInt() ?? 0,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Service.fromJson(String source) => Service.fromMap(json.decode(source));
+  factory Service.fromJson(String source) =>
+      Service.fromMap(json.decode(source));
 }
