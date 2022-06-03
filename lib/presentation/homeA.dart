@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:job_house/constantes.dart';
+import 'package:job_house/data/model/user.dart';
 
 import 'besoin.dart';
 
@@ -59,39 +62,56 @@ class _HomeAState extends State<HomeA> {
           padding: const EdgeInsets.all(8.0),
           child: ListView(
             children: [
-              Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(4),
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: primaryCouleur,
-                      ),
-                      color: fontProfile,
-                      image: const DecorationImage(
-                          image: AssetImage("asset/img/femey.PNG"),
-                          fit: BoxFit.cover),
-                      borderRadius: BorderRadius.circular(7),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Welcome",
-                              style: Theme.of(context).textTheme.bodySmall),
-                          Text("Jimmy Suillivan ",
-                              style: Theme.of(context).textTheme.bodyLarge),
-                        ]),
-                  ),
-                  const Spacer(),
-                  Icon(Icons.notifications, color: basicColor.withOpacity(.5)),
-                ],
-              ),
+              StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                  stream: FirebaseFirestore.instance
+                      .collection('user')
+                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text(snapshot.error.toString());
+                    }
+                    if (!snapshot.hasData) {
+                      return const Text("chargement");
+                    }
+                    UserModel data = UserModel.fromMap(snapshot.data!.data()!);
+                    return Row(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(4),
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: primaryCouleur,
+                            ),
+                            color: fontProfile,
+                            image: const DecorationImage(
+                                image: AssetImage("asset/img/femey.PNG"),
+                                fit: BoxFit.cover),
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Welcome",
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall),
+                                Text(data.username,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge),
+                              ]),
+                        ),
+                        const Spacer(),
+                        Icon(Icons.notifications,
+                            color: basicColor.withOpacity(.5)),
+                      ],
+                    );
+                  }),
               const SizedBox(
                 height: 10,
               ),

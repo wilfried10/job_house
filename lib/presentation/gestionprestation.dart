@@ -136,11 +136,7 @@ class _GestionPrestationState extends State<GestionPrestation> {
                               telephone.text.trim(),
                               ville.text.trim(),
                               profession.text.trim()));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text(
-                                    'votre compte a ete creer avc succes')),
-                          );
+
                           Shared.setPrestataireCreated(true);
                           Navigator.pushAndRemoveUntil(
                               context,

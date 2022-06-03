@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:job_house/presentation/connection/etape1.dart';
@@ -8,7 +9,8 @@ import 'package:job_house/services/shared_pref.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  
+// FirebaseDatabase.instance.setPersistenceEnabled(true);
+
   await Shared.init();
 
   return runApp(
