@@ -8,6 +8,7 @@ import 'package:job_house/services/shared_pref.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  
   await Shared.init();
 
   return runApp(
